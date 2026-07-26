@@ -1,46 +1,31 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\SkillController;
-use App\Http\Controllers\DashboardController;
 
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard');
-// Route::get('/', [HomeController::class, 'index']);
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
-Route::get('/categories', [CategoryController::class, 'index'])
-    ->name('categories.index');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/categories/create', [CategoryController::class, 'create'])
-    ->name('categories.create');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/categories', [CategoryController::class, 'store'])
-    ->name('categories.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])
-    ->name('categories.edit');
-
-Route::put('/categories/{category}', [CategoryController::class, 'update'])
-    ->name('categories.update');
-Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
-    ->name('categories.destroy');
-Route::get('/skills', [SkillController::class, 'index'])
-    ->name('skills.index');
-
-Route::get('/skills/create', [SkillController::class, 'create'])
-    ->name('skills.create');
-
-    Route::post('/skills', [SkillController::class, 'store'])
-    ->name('skills.store');
-
-Route::get('/skills/{skill}/edit', [SkillController::class, 'edit'])
-    ->name('skills.edit');
-
-Route::put('/skills/{skill}', [SkillController::class, 'update'])
-    ->name('skills.update');
-
-Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])
-    ->name('skills.destroy');
-
+require __DIR__.'/auth.php';
