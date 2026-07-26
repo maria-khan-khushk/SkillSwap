@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Skill;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreSkillRequest;
+use App\Http\Requests\UpdateSkillRequest;
 
 class SkillController extends Controller
 {
@@ -48,21 +50,8 @@ public function create()
 
     return view('skills.create', compact('categories'));
 }
-public function store(Request $request)
+public function store(StoreSkillRequest $request)
 {
-    $request->validate([
-
-        'category_id' => 'required|exists:categories,id',
-
-        'title' => 'required|max:100',
-
-        'description' => 'nullable|max:500',
-
-        'experience_level' => 'required',
-
-        'created_by' => 'required|max:100',
-
-    ]);
 
     Skill::create([
 
@@ -89,21 +78,8 @@ public function edit(Skill $skill)
 
     return view('skills.edit', compact('skill', 'categories'));
 }
-public function update(Request $request, Skill $skill)
+public function update(UpdateSkillRequest $request, Skill $skill)
 {
-    $request->validate([
-
-        'category_id' => 'required|exists:categories,id',
-
-        'title' => 'required|max:100',
-
-        'description' => 'nullable|max:500',
-
-        'experience_level' => 'required',
-
-        'created_by' => 'required|max:100'
-
-    ]);
 
     $skill->update([
 
