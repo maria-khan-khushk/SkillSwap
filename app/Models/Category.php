@@ -16,4 +16,8 @@ class Category extends Model
         'description'
 
     ];
+    public function skills()
+{
+    return $this->hasMany(Skill::class);
+}
 }

@@ -8,12 +8,22 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     // Show all categories
-    public function index()
-    {
-        $categories = Category::all();
+public function index(Request $request)
+{
+    // Search keyword
+    $search = $request->search;
 
-        return view('categories.index', compact('categories'));
-    }
+    // Query Builder
+    $categories = Category::when($search, function ($query) use ($search) {
+
+        $query->where('name', 'like', '%' . $search . '%');
+
+    })
+    ->latest()
+    ->paginate(3);
+
+    return view('categories.index', compact('categories', 'search'));
+}
 
     // Show Add Form
     public function create()
@@ -25,11 +35,25 @@ class CategoryController extends Controller
 public function store(Request $request)
 {
     // Validate Form Data
-    $request->validate([
-        'name' => 'required|max:100',
-        'description' => 'nullable'
-    ]);
+    $request->validate(
 
+    [
+        'name' => 'required|max:100',
+
+        'description' => 'nullable|max:255'
+    ],
+
+    [
+
+        'name.required' => 'Please enter a category name.',
+
+        'name.max' => 'Category name cannot exceed 100 characters.',
+
+        'description.max' => 'Description cannot exceed 255 characters.'
+
+    ]
+
+);
     // Save Data
     Category::create([
         'name' => $request->name,

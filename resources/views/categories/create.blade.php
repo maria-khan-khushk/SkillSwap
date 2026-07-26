@@ -13,23 +13,52 @@
 
         @csrf
 
-        <div class="mb-3">
-            <label>Category Name</label>
+       <div class="mb-3">
 
-            <input
-                type="text"
-                name="name"
-                class="form-control">
+    <label class="form-label">
+
+        Category Name
+
+    </label>
+
+    <input
+        type="text"
+        name="name"
+        class="form-control @error('name') is-invalid @enderror"
+        value="{{ old('name') }}">
+
+    @error('name')
+
+        <div class="invalid-feedback">
+
+            {{ $message }}
+
         </div>
 
-        <div class="mb-3">
-            <label>Description</label>
+    @enderror
 
-            <textarea
-                name="description"
-                class="form-control"
-                rows="4"></textarea>
+</div>
+
+       <div class="mb-3">
+
+    <label>Description</label>
+
+    <textarea
+        name="description"
+        rows="4"
+        class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+
+    @error('description')
+
+        <div class="invalid-feedback">
+
+            {{ $message }}
+
         </div>
+
+    @enderror
+
+</div>
 
         <button class="btn btn-primary">
 
