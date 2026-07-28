@@ -23,7 +23,6 @@ class UpdateSkillRequest extends FormRequest
 
             'experience_level' => 'required|in:Beginner,Intermediate,Advanced',
 
-            'created_by' => 'required|min:3|max:100',
 
         ];
     }

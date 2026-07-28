@@ -52,7 +52,6 @@ public function create()
 }
 public function store(StoreSkillRequest $request)
 {
-
     Skill::create([
 
         'category_id' => $request->category_id,
@@ -63,7 +62,7 @@ public function store(StoreSkillRequest $request)
 
         'experience_level' => $request->experience_level,
 
-        'created_by' => $request->created_by,
+        'created_by' => auth()->user()->name,
 
     ]);
 
@@ -71,16 +70,8 @@ public function store(StoreSkillRequest $request)
             ->route('skills.index')
             ->with('success', 'Skill added successfully!');
 }
-
-public function edit(Skill $skill)
-{
-    $categories = Category::orderBy('name')->get();
-
-    return view('skills.edit', compact('skill', 'categories'));
-}
 public function update(UpdateSkillRequest $request, Skill $skill)
 {
-
     $skill->update([
 
         'category_id' => $request->category_id,
@@ -91,7 +82,7 @@ public function update(UpdateSkillRequest $request, Skill $skill)
 
         'experience_level' => $request->experience_level,
 
-        'created_by' => $request->created_by
+        'created_by' => auth()->user()->name,
 
     ]);
 

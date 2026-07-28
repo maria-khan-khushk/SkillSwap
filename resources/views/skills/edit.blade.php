@@ -161,32 +161,6 @@
 
                         </div>
 
-                        <!-- Created By -->
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-                                Created By
-                            </label>
-
-                            <input
-                                type="text"
-                                name="created_by"
-                                class="form-control @error('created_by') is-invalid @enderror"
-                                value="{{ old('created_by', $skill->created_by) }}">
-
-                            @error('created_by')
-
-                                <div class="invalid-feedback">
-
-                                    {{ $message }}
-
-                                </div>
-
-                            @enderror
-
-                        </div>
-
                         <button
                             type="submit"
                             class="btn btn-success">

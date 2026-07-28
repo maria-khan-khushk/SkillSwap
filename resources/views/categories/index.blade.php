@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Skills')
+@section('title', 'Categories')
 
 @section('content')
 
@@ -8,10 +8,10 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h1>Skills</h1>
+        <h1>Skill Categories</h1>
 
-        <a href="{{ route('skills.create') }}" class="btn btn-primary">
-            + Add Skill
+        <a href="{{ route('categories.create') }}" class="btn btn-primary">
+            + Add Category
         </a>
 
     </div>
@@ -28,63 +28,22 @@
 
     <div class="row">
 
-        @forelse($skills as $skill)
+        @forelse($categories as $category)
 
             <div class="col-md-4 mb-4">
 
-                <div class="card shadow-sm h-100">
+                <div class="card shadow-sm border-0 h-100">
 
                     <div class="card-body">
 
-                        <h4>{{ $skill->title }}</h4>
+                        <h4>{{ $category->name }}</h4>
 
-                        <p>
+                        <p>{{ $category->description }}</p>
 
-                            <strong>Category:</strong>
-
-                            {{ $skill->category->name }}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Experience:</strong>
-
-                            {{ $skill->experience_level }}
-
-                        </p>
-
-                        <p>
-
-                            <strong>Created By:</strong>
-
-                            {{ $skill->created_by }}
-
-                        </p>
-
-                        <p>
-
-                            {{ $skill->description }}
-
-                        </p>
-
-                        <div class="d-flex gap-2">
-
-                            <a href="#"
-                               class="btn btn-warning btn-sm">
-
-                                Edit
-
-                            </a>
-
-                            <button
-                                class="btn btn-danger btn-sm">
-
-                                Delete
-
-                            </button>
-
-                        </div>
+                        <a href="{{ route('categories.edit', $category->id) }}"
+                           class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
 
                     </div>
 
@@ -98,19 +57,13 @@
 
                 <div class="alert alert-info">
 
-                    No skills found.
+                    No categories found.
 
                 </div>
 
             </div>
 
         @endforelse
-
-    </div>
-
-    <div class="mt-4">
-
-        {{ $skills->links() }}
 
     </div>
 

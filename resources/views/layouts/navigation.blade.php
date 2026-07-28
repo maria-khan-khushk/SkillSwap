@@ -1,3 +1,10 @@
+Dashboard
+
+Categories
+
+Skills
+
+Profile
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,7 +44,22 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        <x-nav-link
+    :href="route('categories.index')"
+    :active="request()->routeIs('categories.*')">
 
+    Categories
+
+</x-nav-link>
+
+<x-nav-link
+    :href="route('skills.index')"
+    :active="request()->routeIs('skills.*')">
+
+    Skills
+
+</x-nav-link>
+ 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
