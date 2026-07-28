@@ -125,33 +125,35 @@
                             {{ $skill->description }}
                         </p>
 
-                        <div class="d-flex gap-2">
+@can('update', $skill)
 
-                            <a href="{{ route('skills.edit', $skill->id) }}"
-                               class="btn btn-warning btn-sm">
+<div class="d-flex gap-2">
 
-                                Edit
+    <a href="{{ route('skills.edit', $skill->id) }}"
+       class="btn btn-warning btn-sm">
+        Edit
+    </a>
 
-                            </a>
+    <form action="{{ route('skills.destroy', $skill->id) }}"
+          method="POST">
 
-                            <form action="{{ route('skills.destroy', $skill->id) }}"
-                                  method="POST">
+        @csrf
+        @method('DELETE')
 
-                                @csrf
-                                @method('DELETE')
+        <button
+            type="submit"
+            class="btn btn-danger btn-sm"
+            onclick="return confirm('Are you sure you want to delete this skill?')">
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Are you sure you want to delete this skill?')">
+            Delete
 
-                                    Delete
+        </button>
 
-                                </button>
+    </form>
 
-                            </form>
+</div>
 
-                        </div>
+@endcan
 
                     </div>
 

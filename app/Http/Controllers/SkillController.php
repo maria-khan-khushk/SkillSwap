@@ -63,7 +63,7 @@ public function store(StoreSkillRequest $request)
         'experience_level' => $request->experience_level,
 
         'created_by' => auth()->user()->name,
-
+        'user_id' => auth()->id(),
     ]);
 
     return redirect()
@@ -72,6 +72,8 @@ public function store(StoreSkillRequest $request)
 }
 public function update(UpdateSkillRequest $request, Skill $skill)
 {
+    $this->authorize('update', $skill);
+
     $skill->update([
 
         'category_id' => $request->category_id,
@@ -87,15 +89,25 @@ public function update(UpdateSkillRequest $request, Skill $skill)
     ]);
 
     return redirect()
-            ->route('skills.index')
-            ->with('success', 'Skill updated successfully!');
+        ->route('skills.index')
+        ->with('success', 'Skill updated successfully!');
 }
 public function destroy(Skill $skill)
 {
+    $this->authorize('delete', $skill);
+
     $skill->delete();
 
     return redirect()
-            ->route('skills.index')
-            ->with('success', 'Skill deleted successfully!');
+        ->route('skills.index')
+        ->with('success', 'Skill deleted successfully!');
+}
+public function edit(Skill $skill)
+{
+    $this->authorize('update', $skill);
+
+    $categories = Category::orderBy('name')->get();
+
+    return view('skills.edit', compact('skill', 'categories'));
 }
 }
