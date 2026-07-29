@@ -6,15 +6,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');
 
     // Categories
     Route::resource('categories', CategoryController::class);
