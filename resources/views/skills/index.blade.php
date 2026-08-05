@@ -87,6 +87,15 @@
         </div>
 
     @endif
+    @if(session('error'))
+
+    <div class="alert alert-danger">
+
+        {{ session('error') }}
+
+    </div>
+
+@endif
 
     <p class="text-muted mb-3">
 
@@ -125,35 +134,55 @@
                             {{ $skill->description }}
                         </p>
 
-@can('update', $skill)
+<div class="d-flex gap-2 flex-wrap">
 
-<div class="d-flex gap-2">
+    {{-- Admin can Edit/Delete --}}
+    @can('update', $skill)
 
-    <a href="{{ route('skills.edit', $skill->id) }}"
-       class="btn btn-warning btn-sm">
-        Edit
-    </a>
+        <a href="{{ route('skills.edit', $skill->id) }}"
+           class="btn btn-warning btn-sm">
+            Edit
+        </a>
 
-    <form action="{{ route('skills.destroy', $skill->id) }}"
-          method="POST">
+        <form action="{{ route('skills.destroy', $skill->id) }}"
+              method="POST">
 
-        @csrf
-        @method('DELETE')
+            @csrf
+            @method('DELETE')
 
-        <button
-            type="submit"
-            class="btn btn-danger btn-sm"
-            onclick="return confirm('Are you sure you want to delete this skill?')">
+            <button
+                type="submit"
+                class="btn btn-danger btn-sm"
+                onclick="return confirm('Are you sure you want to delete this skill?')">
 
-            Delete
+                Delete
 
-        </button>
+            </button>
 
-    </form>
+        </form>
+
+    @endcan
+
+    {{-- User can request other user's skills --}}
+    @if(auth()->id() != $skill->user_id)
+
+        <form action="{{ route('requests.store', $skill->id) }}"
+              method="POST">
+
+            @csrf
+
+            <button type="submit"
+                    class="btn btn-success btn-sm">
+
+                Request Skill
+
+            </button>
+
+        </form>
+
+    @endif
 
 </div>
-
-@endcan
 
                     </div>
 
