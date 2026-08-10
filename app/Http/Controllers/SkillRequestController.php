@@ -6,6 +6,7 @@ use App\Models\Skill;
 use App\Models\SkillRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\SkillRequestNotification;
 
 class SkillRequestController extends Controller
 {
@@ -62,7 +63,8 @@ class SkillRequestController extends Controller
         }
 
 
-        SkillRequest::create([
+        // Create skill request
+        $skillRequest = SkillRequest::create([
 
             'sender_id'   => Auth::id(),
 
@@ -77,6 +79,12 @@ class SkillRequestController extends Controller
         ]);
 
 
+        // Send notification to skill owner
+        $skill->user->notify(
+            new SkillRequestNotification($skillRequest)
+        );
+
+
         return back()->with(
             'success',
             'Skill request sent successfully.'
@@ -87,11 +95,10 @@ class SkillRequestController extends Controller
     // Accept request
     public function accept(SkillRequest $skillRequest)
     {
-        // Make sure only the receiver can accept the request
+        // Only the receiver can accept the request
         if ($skillRequest->receiver_id != Auth::id()) {
 
             abort(403, 'Unauthorized action.');
-
         }
 
 
@@ -105,11 +112,18 @@ class SkillRequestController extends Controller
         }
 
 
+        // Update request status
         $skillRequest->update([
 
             'status' => 'accepted'
 
         ]);
+
+
+        // Send notification to the sender
+        $skillRequest->sender->notify(
+            new SkillRequestNotification($skillRequest)
+        );
 
 
         return back()->with(
@@ -122,11 +136,10 @@ class SkillRequestController extends Controller
     // Reject request
     public function reject(SkillRequest $skillRequest)
     {
-        // Make sure only the receiver can reject the request
+        // Only the receiver can reject the request
         if ($skillRequest->receiver_id != Auth::id()) {
 
             abort(403, 'Unauthorized action.');
-
         }
 
 
@@ -140,11 +153,18 @@ class SkillRequestController extends Controller
         }
 
 
+        // Update request status
         $skillRequest->update([
 
             'status' => 'rejected'
 
         ]);
+
+
+        // Send notification to the sender
+        $skillRequest->sender->notify(
+            new SkillRequestNotification($skillRequest)
+        );
 
 
         return back()->with(
