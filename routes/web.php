@@ -22,16 +22,25 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::resource('skills', SkillController::class);
-    // Skill Requests
+// Skill Requests
+
+// Requests received by the logged-in user
 Route::get('/requests', [SkillRequestController::class, 'index'])
     ->name('requests.index');
 
+// Requests sent by the logged-in user
+Route::get('/my-requests', [SkillRequestController::class, 'myRequests'])
+    ->name('requests.my');
+
+// Send request for a skill
 Route::post('/skills/{skill}/request', [SkillRequestController::class, 'store'])
     ->name('requests.store');
 
+// Accept request
 Route::patch('/requests/{skillRequest}/accept', [SkillRequestController::class, 'accept'])
     ->name('requests.accept');
 
+// Reject request
 Route::patch('/requests/{skillRequest}/reject', [SkillRequestController::class, 'reject'])
     ->name('requests.reject');
 

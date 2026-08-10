@@ -44,6 +44,9 @@
                     <a href="{{ route('dashboard') }}" class="btn btn-outline-light btn-sm">
                         Dashboard
                     </a>
+                    <a href="{{ route('requests.my') }}" class="btn btn-outline-light btn-sm">
+    My Requests
+</a>
                     <a href="{{ route('requests.index') }}" class="btn btn-outline-light btn-sm">
     Skill Requests
 </a>
