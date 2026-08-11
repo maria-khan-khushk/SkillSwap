@@ -163,8 +163,16 @@
 
     @endcan
 
-    {{-- User can request other user's skills --}}
-    @if(auth()->id() != $skill->user_id)
+   {{-- User can request other user's skills --}}
+@if(auth()->id() != $skill->user_id)
+
+    @php
+        $myRequest = $myRequests->get($skill->id);
+    @endphp
+
+
+    {{-- No request exists --}}
+    @if(!$myRequest)
 
         <form action="{{ route('requests.store', $skill->id) }}"
               method="POST">
@@ -180,7 +188,51 @@
 
         </form>
 
+
+    {{-- Request is pending --}}
+    @elseif($myRequest->status === 'pending')
+
+        <button type="button"
+                class="btn btn-warning btn-sm"
+                disabled>
+
+            Request Pending
+
+        </button>
+
+
+    {{-- Request accepted --}}
+    @elseif($myRequest->status === 'accepted')
+
+        <button type="button"
+                class="btn btn-success btn-sm"
+                disabled>
+
+            Request Accepted
+
+        </button>
+
+
+    {{-- Request rejected --}}
+    @elseif($myRequest->status === 'rejected')
+
+        <form action="{{ route('requests.store', $skill->id) }}"
+              method="POST">
+
+            @csrf
+
+            <button type="submit"
+                    class="btn btn-outline-danger btn-sm">
+
+                Request Again
+
+            </button>
+
+        </form>
+
     @endif
+
+@endif
 
 </div>
 

@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SkillRequestController;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
@@ -20,6 +22,16 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('categories', CategoryController::class);
 
     });
+
+    // Notifications
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
+
+Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.read');
+
+Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.read-all');
 
     Route::resource('skills', SkillController::class);
 // Skill Requests

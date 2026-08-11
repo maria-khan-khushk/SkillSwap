@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\SkillRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Skill;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use App\Http\Requests\UpdateSkillRequest;
 
 class SkillController extends Controller
 {
-   public function index(Request $request)
+public function index(Request $request)
 {
     // Sab categories dropdown ke liye
     $categories = Category::orderBy('name')->get();
@@ -21,26 +22,47 @@ class SkillController extends Controller
     // Search
     if ($request->filled('search')) {
 
-        $query->where('title', 'LIKE', '%' . $request->search . '%');
+        $query->where(
+            'title',
+            'LIKE',
+            '%' . $request->search . '%'
+        );
 
     }
 
     // Category Filter
     if ($request->filled('category')) {
 
-        $query->where('category_id', $request->category);
+        $query->where(
+            'category_id',
+            $request->category
+        );
 
     }
 
     // Pagination
     $skills = $query->latest()->paginate(6);
 
-    // Search aur filter ko pagination ke sath maintain rakhega
+    // Search/filter pagination ke sath maintain
     $skills->appends($request->query());
+
+    /*
+    |--------------------------------------------------------------------------
+    | Current User ke Skill Requests
+    |--------------------------------------------------------------------------
+    */
+
+    $myRequests = SkillRequest::where(
+        'sender_id',
+        Auth::id()
+    )
+    ->get()
+    ->keyBy('skill_id');
 
     return view('skills.index', compact(
         'skills',
-        'categories'
+        'categories',
+        'myRequests'
     ));
 }
 

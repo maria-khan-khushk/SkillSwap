@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @auth
+    <meta name="user-id" content="{{ auth()->id() }}">
+@endauth
 
     <title>@yield('title', 'SkillSwap')</title>
 
@@ -49,6 +52,25 @@
 </a>
                     <a href="{{ route('requests.index') }}" class="btn btn-outline-light btn-sm">
     Skill Requests
+</a>
+
+<a href="{{ route('notifications.index') }}"
+   class="btn btn-outline-light btn-sm position-relative">
+
+    Notifications
+
+    @auth
+        @if(auth()->user()->unreadNotifications->count() > 0)
+
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+                {{ auth()->user()->unreadNotifications->count() }}
+
+            </span>
+
+        @endif
+    @endauth
+
 </a>
                     <a href="{{ route('profile.edit') }}" class="btn btn-outline-light">
     My Profile

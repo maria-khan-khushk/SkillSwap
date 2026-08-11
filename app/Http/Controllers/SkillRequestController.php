@@ -7,7 +7,7 @@ use App\Models\SkillRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\SkillRequestNotification;
-
+use App\Events\SkillRequestUpdated;
 class SkillRequestController extends Controller
 {
     // Show requests received by logged-in user
@@ -118,7 +118,7 @@ class SkillRequestController extends Controller
             'status' => 'accepted'
 
         ]);
-
+event(new SkillRequestUpdated($skillRequest));
 
         // Send notification to the sender
         $skillRequest->sender->notify(
@@ -159,7 +159,7 @@ class SkillRequestController extends Controller
             'status' => 'rejected'
 
         ]);
-
+event(new SkillRequestUpdated($skillRequest));
 
         // Send notification to the sender
         $skillRequest->sender->notify(
