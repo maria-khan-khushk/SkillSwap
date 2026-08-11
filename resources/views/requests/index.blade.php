@@ -6,126 +6,230 @@
 
 <div class="container py-5">
 
-    <h2 class="mb-4">Received Skill Requests</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
+        <div>
+            <h1>Received Skill Requests</h1>
+
+            <p class="text-muted mb-0">
+                Manage requests received for your skills.
+            </p>
+        </div>
+
+        <a href="{{ route('skills.index') }}" class="btn btn-primary">
+            Browse Skills
+        </a>
+
+    </div>
+
+
+    {{-- Success Message --}}
     @if(session('success'))
+
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+
     @endif
 
-    <div class="card">
 
-        <div class="card-body">
+    {{-- Error Message --}}
+    @if(session('error'))
 
-            <table class="table table-bordered">
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
 
-                <thead>
+    @endif
 
-                    <tr>
-                        <th>Sender</th>
-                        <th>Skill</th>
-                        <th>Message</th>
-                        <th>Status</th>
-                        <th width="220">Action</th>
-                    </tr>
 
-                </thead>
+    @if($requests->count() > 0)
 
-                <tbody>
+        <div class="card shadow-sm border-0">
 
-                    @forelse($requests as $request)
+            <div class="card-body p-0">
 
-                        <tr>
+                <div class="table-responsive">
 
-                            <td>{{ $request->sender->name }}</td>
+                    <table class="table table-hover mb-0">
 
-                            <td>{{ $request->skill->title }}</td>
+                        <thead class="table-dark">
 
-                            <td>{{ $request->message ?? '-' }}</td>
+                            <tr>
 
-                            <td>
+                                <th>Sender</th>
 
-                                @if($request->status=='pending')
-                                    <span class="badge bg-warning">Pending</span>
+                                <th>Skill</th>
 
-                                @elseif($request->status=='accepted')
-                                    <span class="badge bg-success">Accepted</span>
+                                <th>Message</th>
 
-                                @else
-                                    <span class="badge bg-danger">Rejected</span>
+                                <th>Status</th>
 
-                                @endif
+                                <th>Action</th>
 
-                            </td>
+                            </tr>
 
-                            <td>
+                        </thead>
 
-                                @if($request->status=='pending')
 
-                                    <div class="d-flex gap-2">
+                        <tbody>
 
-                                        <form method="POST"
-                                              action="{{ route('requests.accept',$request->id) }}">
+                            @foreach($requests as $request)
 
-                                            @csrf
-                                            @method('PATCH')
+                                <tr>
 
-                                            <button class="btn btn-success btn-sm">
+                                    {{-- Sender --}}
+                                    <td>
+                                        {{ $request->sender->name }}
+                                    </td>
 
-                                                Accept
 
-                                            </button>
+                                    {{-- Skill --}}
+                                    <td>
+                                        <strong>
+                                            {{ $request->skill->title }}
+                                        </strong>
+                                    </td>
 
-                                        </form>
 
-                                        <form method="POST"
-                                              action="{{ route('requests.reject',$request->id) }}">
+                                    {{-- Message --}}
+                                    <td>
 
-                                            @csrf
-                                            @method('PATCH')
+                                        @if($request->message)
 
-                                            <button class="btn btn-danger btn-sm">
+                                            {{ $request->message }}
 
-                                                Reject
+                                        @else
 
-                                            </button>
+                                            <span class="text-muted">
+                                                -
+                                            </span>
 
-                                        </form>
+                                        @endif
 
-                                    </div>
+                                    </td>
 
-                                @else
 
-                                    -
+                                    {{-- Status --}}
+                                    <td>
 
-                                @endif
+                                        @if($request->status === 'pending')
 
-                            </td>
+                                            <span class="badge bg-warning text-dark">
+                                                Pending
+                                            </span>
 
-                        </tr>
+                                        @elseif($request->status === 'accepted')
 
-                    @empty
+                                            <span class="badge bg-success">
+                                                Accepted
+                                            </span>
 
-                        <tr>
+                                        @elseif($request->status === 'rejected')
 
-                            <td colspan="5" class="text-center">
+                                            <span class="badge bg-danger">
+                                                Rejected
+                                            </span>
 
-                                No Requests Found.
+                                        @endif
 
-                            </td>
+                                    </td>
 
-                        </tr>
 
-                    @endforelse
+                                    {{-- Actions --}}
+                                    <td>
 
-                </tbody>
+                                        @if($request->status === 'pending')
 
-            </table>
+                                            <div class="d-flex gap-2">
+
+                                                {{-- Accept --}}
+                                                <form
+                                                    action="{{ route('requests.accept', $request->id) }}"
+                                                    method="POST">
+
+                                                    @csrf
+                                                    @method('PATCH')
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-success btn-sm">
+
+                                                        Accept
+
+                                                    </button>
+
+                                                </form>
+
+
+                                                {{-- Reject --}}
+                                                <form
+                                                    action="{{ route('requests.reject', $request->id) }}"
+                                                    method="POST">
+
+                                                    @csrf
+                                                    @method('PATCH')
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-danger btn-sm">
+
+                                                        Reject
+
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        @else
+
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+
+                                        @endif
+
+                                    </td>
+
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
 
         </div>
 
-    </div>
+    @else
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body text-center py-5">
+
+                <h4>No Skill Requests</h4>
+
+                <p class="text-muted">
+                    You haven't received any skill requests yet.
+                </p>
+
+                <a href="{{ route('skills.index') }}"
+                   class="btn btn-primary">
+
+                    Browse Skills
+
+                </a>
+
+            </div>
+
+        </div>
+
+    @endif
 
 </div>
 
