@@ -31,17 +31,39 @@
 
                 <div class="mt-5 d-flex gap-3">
 
-                    <a href="#" class="btn btn-primary">
+                    @if(auth()->check())
 
-                        Get Started
+    <a href="{{ route('dashboard') }}"
+       class="btn btn-primary">
 
-                    </a>
+        Go to Dashboard
 
-                    <a href="#" class="btn btn-outline-primary">
+    </a>
 
-                        Browse Skills
+    <a href="{{ route('skills.index') }}"
+       class="btn btn-outline-primary">
 
-                    </a>
+        Browse Skills
+
+    </a>
+
+@else
+
+    <a href="{{ route('register') }}"
+       class="btn btn-primary">
+
+        Get Started
+
+    </a>
+
+    <a href="{{ route('skills.index') }}"
+       class="btn btn-outline-primary">
+
+        Browse Skills
+
+    </a>
+
+@endif
 
                 </div>
 

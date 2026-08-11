@@ -16,12 +16,25 @@
 
             </p>
 
-            <a href="#"
-               class="btn btn-primary">
+           @if(auth()->check())
 
-                Join Now
+    <a href="{{ route('dashboard') }}"
+       class="btn btn-primary">
 
-            </a>
+        Go to Dashboard
+
+    </a>
+
+@else
+
+    <a href="{{ route('register') }}"
+       class="btn btn-primary">
+
+        Join Now
+
+    </a>
+
+@endif
 
         </div>
 
